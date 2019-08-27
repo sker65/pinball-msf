@@ -1,7 +1,7 @@
-# pinball-lw3
+# pinball-msf
 Arduino based GI rgb replacement.
 
-Firmware that reads the switch matrix from any data east pinball machine and uses the switch state to derive game state (like attract mode or multiball)
+New version that works with msf, i2c controlled
 
 Depending on game state a different lightshow is shown via a 2811 rgb led controller based string of rgb leds.
 
