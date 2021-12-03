@@ -51,7 +51,7 @@ bool NormalPlay::updateLeds(unsigned long now, CRGB* leds) {
 			CRGBPalette16 pal = normalPallette;
 
 			for (int i = 0; i < num; i++) {
-				leds[index[i]] = ColorFromPalette(pal, colorIndex, 255, BLEND);
+				leds[index[i]] = ColorFromPalette(pal, colorIndex, 255, LINEARBLEND);
 			}
 			return true;
 		}

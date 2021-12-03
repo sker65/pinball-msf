@@ -25,7 +25,7 @@ void MultiBallPlay::SetupBlackAndWhiteStripedPalette() {
 
 }
 
-void MultiBallPlay::updateLeds(unsigned long now, CRGB* leds) {
+bool MultiBallPlay::updateLeds(unsigned long now, CRGB* leds) {
 	if (active && now > nextUpdate) {
 		nextUpdate = now + animationDelay;
 		paletteIndex = paletteIndex + 1; /* motion speed */
