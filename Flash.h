@@ -5,14 +5,13 @@
  *      Author: sr
  */
 
-#ifndef PINBALL_LW3_FLASH_H_
-#define PINBALL_LW3_FLASH_H_
+#pragma once
 
 #include "Effect.h"
 
 class Flash : public Effect {
 public:
-	Flash(int duration, CRGB* color, const int* pos, int num, int level);
+	Flash( int duration, CRGB* color, const uint8_t* pos, int num, int level );
 	virtual ~Flash();
 
 	virtual bool updateLeds( unsigned long now, CRGB* leds );
@@ -21,5 +20,3 @@ private:
 	int duration;
 	CRGB* color;
 };
-
-#endif /* PINBALL_LW3_FLASH_H_ */

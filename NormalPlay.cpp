@@ -14,7 +14,7 @@ extern const TProgmemRGBPalette16 normalPallette PROGMEM = {
     0x0000FF, 0x0000FF, 0x0000FF, 0xFFD690, 0xFFD690, 0x0000FF, 0x0000FF, 0xFFD690,
 };
 
-NormalPlay::NormalPlay( const int* index, int num, int animationSpeed, int holdCycles, int pin )
+NormalPlay::NormalPlay( const uint8_t* index, int num, int animationSpeed, int holdCycles, int pin )
     : Effect( 0, index, num ) {
 	paletteIndex = 0;
 	nextUpdate = 0;

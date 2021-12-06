@@ -1,5 +1,6 @@
 #include "DebugEffect.h"
 #include "Flash.h"
+#include "Glow.h"
 #include "LedDriver.h"
 #include "NormalPlay.h"
 #include "SpeakerFlash.h"
@@ -29,7 +30,7 @@ int slingLeftLeds[] = { 103, 104 };
 CRGB white( 255, 255, 255 );
 // CRGB warmWhite100( 255, 214, 170);
 
-const int allLeds[] = { // von unten nach oben
+const uint8_t allLeds[] = { // von unten nach oben
     0,  1,  2,  3,  4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,  16,  17,  18,  19, 20, 21, 22, 23,
     24, 25, 26, 27, 28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43, 44, 45, 46, 47,
     48, 49, 50, 51, 52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67, 68, 69, 70, 71,
@@ -37,22 +38,22 @@ const int allLeds[] = { // von unten nach oben
     96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 198, 109, 110, 111, 112, 113, 114, 115 };
 
 // 0-23 right speaker
-const int rightSpeaker[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+const uint8_t rightSpeaker[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
 
 // 24-47 left speaker
-const int leftSpeaker[] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-                            36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 };
+const uint8_t leftSpeaker[] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+                                36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47 };
 
 // 48-77 top bar from left to right
-const int topBar[] = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
-                       63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77 };
+const uint8_t topBar[] = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
+                           63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77 };
 
 // 78 - 79 creature
-const int creature[] = { 78, 79 };
+const uint8_t creature[] = { 78, 79 };
 // 92 - 93 upper scoop
-const int upperScoop[] = { 92, 93 };
+const uint8_t upperScoop[] = { 92, 93 };
 // 99 - 100 lower scoop
-const int lowerScoop[] = { 99, 100 };
+const uint8_t lowerScoop[] = { 99, 100 };
 // 80 - 91 GI upper
 // 94 - 98 GI left
 // 101 - 102 GI
@@ -61,35 +62,36 @@ const int lowerScoop[] = { 99, 100 };
 // 107 - 108 right sling
 // 109 - 115 GI right
 
-const int playfieldGi[] = { 80, 81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  94,  95,  96,  97,
-                            98, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115 };
+const uint8_t playfieldGi[] = { 80, 81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  94,  95,  96,  97,
+                                98, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115 };
 
 #define GI_SENSE_PIN 8
 
-NormalPlay normalPlay( playfieldGi, sizeof( playfieldGi ) / sizeof( int ), 15, 60, GI_SENSE_PIN );
-SpeakerFlash speakerFlash( leftSpeaker, sizeof( leftSpeaker ) / sizeof( int ), rightSpeaker,
-                           sizeof( rightSpeaker ) / sizeof( int ), 50, 2 );
+NormalPlay normalPlay( playfieldGi, sizeof( playfieldGi ) / sizeof( uint8_t ), 15, 60, GI_SENSE_PIN );
+SpeakerFlash speakerFlash( leftSpeaker, sizeof( leftSpeaker ) / sizeof( uint8_t ), rightSpeaker,
+                           sizeof( rightSpeaker ) / sizeof( uint8_t ), 50, 2 );
 
-DebugEffect debugEffect( allLeds, sizeof( allLeds ) / sizeof( int ), 100 );
+DebugEffect debugEffect( allLeds, sizeof( allLeds ) / sizeof( uint8_t ), 100 );
 
 CRGB creatureColor( 0, 255, 0 );
 
-Flash creatureFlash( 50, &creatureColor, creature, sizeof( creature ) / sizeof( int ), 1 );
+Glow topBarGlow( 600, &creatureColor, topBar, sizeof( topBar ) / sizeof( uint8_t ), 1 );
+Glow lowerScoopGlow( 600, &creatureColor, lowerScoop, sizeof( lowerScoop ) / sizeof( uint8_t ), 1 );
+Glow upperScoopGlow( 600, &creatureColor, upperScoop, sizeof( upperScoop ) / sizeof( uint8_t ), 1 );
+Flash creatureFlash( 50, &creatureColor, creature, sizeof( creature ) / sizeof( uint8_t ), 1 );
 
 LedDriver ledDriver( 40 );
 
 void setup() {
-	// DDRA = 0; // all PORTA is input
-	Serial.begin( 9600 );
+	Serial.begin( 57600 );
 
 	ledDriver.begin();
-
-	// pinMode(GI_SENSE_PIN, INPUT_PULLUP);
 
 	ledDriver.registerEffect( &normalPlay );
 	ledDriver.registerEffect( &speakerFlash );
 	ledDriver.registerEffect( &creatureFlash );
 	ledDriver.registerEffect( &debugEffect );
+	ledDriver.registerEffect( &topBarGlow );
 
 	// this is active by default
 	normalPlay.active = false;
@@ -103,6 +105,9 @@ void setup() {
 	// init PWN output
 	pinMode( PWM_PIN, OUTPUT );
 	pinMode( LED, OUTPUT );
+	// no gi sense for now
+	// pinMode(GI_SENSE_PIN, INPUT_PULLUP);
+
 	// let led blink 10 times at startup
 	ledBlinks = 10;
 	// shaker speed 0

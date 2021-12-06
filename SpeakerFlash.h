@@ -11,7 +11,7 @@
 
 class SpeakerFlash : public Effect {
 public:
-	SpeakerFlash(const int* index, int num, const int* index2, int num2, int animationSpeed, int holdCycles);
+	SpeakerFlash( const uint8_t* index, int num, const uint8_t* index2, int num2, int animationSpeed, int holdCycles );
 	virtual ~SpeakerFlash(){};
 
 	virtual bool updateLeds( unsigned long now, CRGB* leds );
@@ -21,7 +21,7 @@ public:
 	int cycle;
 	int animationDelay;
 	uint32_t nextUpdate;
-	const int* index2;
+	const uint8_t* index2;
 	int num2;
 	bool on;
 };

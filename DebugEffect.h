@@ -16,7 +16,7 @@
 
 class DebugEffect : public Effect {
 public:
-	DebugEffect( const int* index, int num, int speed );
+	DebugEffect( const uint8_t* index, int num, int speed );
 	virtual ~DebugEffect(){};
 
 	virtual bool updateLeds( unsigned long now, CRGB* leds );

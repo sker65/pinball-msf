@@ -18,7 +18,7 @@
  * debug effect just lights on led after the other.
  */
 
-DebugEffect::DebugEffect( const int* index, int num, int animationSpeed ) : Effect( 0, index, num ) {
+DebugEffect::DebugEffect( const uint8_t* index, int num, int animationSpeed ) : Effect( 0, index, num ) {
 	nextUpdate = 0;
 	current = 0;
 	this->animationDelay = 1000 / animationSpeed;
