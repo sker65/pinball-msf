@@ -1,7 +1,7 @@
+#include "DebugEffect.h"
 #include "Flash.h"
 #include "LedDriver.h"
 #include "NormalPlay.h"
-#include "SlingFlash.h"
 #include "SpeakerFlash.h"
 #include <FastLED.h>
 #include <Wire.h>
@@ -28,12 +28,6 @@ int slingLeftLeds[] = { 103, 104 };
 
 CRGB white( 255, 255, 255 );
 // CRGB warmWhite100( 255, 214, 170);
-
-Flash slingRightFlash( 500, &white, slingRightLeds, 2, 1 );
-Flash slingLeftFlash( 500, &white, slingLeftLeds, 2, 1 );
-
-SlingFlash slingRight( &slingRightFlash );
-SlingFlash slingLeft( &slingLeftFlash );
 
 const int allLeds[] = { // von unten nach oben
     0,  1,  2,  3,  4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,  16,  17,  18,  19, 20, 21, 22, 23,
@@ -76,6 +70,8 @@ NormalPlay normalPlay( playfieldGi, sizeof( playfieldGi ) / sizeof( int ), 15, 6
 SpeakerFlash speakerFlash( leftSpeaker, sizeof( leftSpeaker ) / sizeof( int ), rightSpeaker,
                            sizeof( rightSpeaker ) / sizeof( int ), 50, 2 );
 
+DebugEffect debugEffect( allLeds, sizeof( allLeds ) / sizeof( int ), 100 );
+
 CRGB creatureColor( 0, 255, 0 );
 
 Flash creatureFlash( 50, &creatureColor, creature, sizeof( creature ) / sizeof( int ), 1 );
@@ -93,10 +89,12 @@ void setup() {
 	ledDriver.registerEffect( &normalPlay );
 	ledDriver.registerEffect( &speakerFlash );
 	ledDriver.registerEffect( &creatureFlash );
+	ledDriver.registerEffect( &debugEffect );
 
 	// this is active by default
-	normalPlay.active = true;
-	speakerFlash.active = true;
+	normalPlay.active = false;
+	speakerFlash.active = false;
+	debugEffect.active = false;
 
 	// init i2c bus
 	Wire.begin( I2C_ADDRESS );
@@ -134,6 +132,7 @@ void setSpeed( int speed ) {
 #define RAMP 0x03
 #define SETSPEED 0x04
 #define PLAYSEQ 0x05
+#define LED_DEBUG 0x06
 
 // array that stores all sequences that can be triggered, must end with END command
 // each sequence step consists of CMD, val & and delay in milliseconds, e.g. RAMP, 90, 1000 means
@@ -183,6 +182,9 @@ void receiveEvent( int count ) {
 		case PLAYSEQ:
 			playSequence( value );
 			break;
+		case LED_DEBUG:
+			debugEffect.active = ( value != 0 );
+			break;
 		default:
 			// unknown command
 			break;
@@ -199,7 +201,7 @@ void loop() {
 	if( now > nextCheck ) {
 		nextCheck = now + 300;
 		int r = random( 10 );
-		if( r == 0 ) {
+		if( r == 0 && !debugEffect.active ) {
 			creatureFlash.start();
 		}
 	}
